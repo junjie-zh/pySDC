@@ -2,7 +2,7 @@ import numpy as np
 from pySDC.projects.DAE.misc.problemDAE import ProblemDAE
 from pySDC.implementations.datatype_classes.mesh import mesh
 # from pySDC.core.Errors import ParameterError
-
+from pySDC.core.problem import WorkCounter
 
 
 
@@ -23,7 +23,8 @@ class ThreeConverterSystem(ProblemDAE):
         super().__init__(nvars, newton_tol)
         self._makeAttributeAndRegister('newton_tol', localVars=locals(), readOnly=True)
         self._makeAttributeAndRegister('nvars', 'diff_nvars', localVars=locals(), readOnly=True)
-
+        # self.work_counters['newton'] = WorkCounter()
+        # self.work_counters['rhs'] = WorkCounter()
         ## Parameters declaration
         self.omega = 2*np.pi*50;           # reference omega, f = 50 Hz
         self.jw =np.array([
@@ -272,7 +273,7 @@ class ThreeConverterSystem(ProblemDAE):
         eqs_flatten = [item for sublist in eqs for item in (sublist if isinstance(sublist,mesh) else [sublist])]
         # eqs_flatten = np.hstack(eqs)
         f[:] = eqs_flatten
-
+        # self.work_counters['rhs']()
         return f
 
     def u_exact(self, t):
